@@ -1,8 +1,110 @@
 kibuntyou365/
+├── public/
+│   └── index.html
+├── src/
+│   ├── App.jsx
+│   └── main.jsx
 ├── package.json
 ├── vite.config.js
-├── index.html (public/)
-├── App.jsx (src/)
-├── main.jsx (src/)
-├── style.css
-├── .gitignore
+└── README.mdimport { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+})<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>気分帳365</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>import { useState } from 'react'
+
+function App() {
+  const [goodScore, setGoodScore] = useState(50)
+  const [badScore, setBadScore] = useState(50)
+  const [note, setNote] = useState('')
+  const [log, setLog] = useState([])
+  const [comment, setComment] = useState('')
+
+  const handleCheck = () => {
+    const time = new Date().toLocaleString()
+    const commentText = generateTherapistComment(note, goodScore, badScore)
+    setComment(commentText)
+    setLog([...log, { goodScore, badScore, note, comment: commentText, time }])
+  }
+
+  const generateTherapistComment = (note, good, bad) => {
+    if (bad > good) {
+      return `今日は少し気分が沈み気味ですね。\n「${note}」\n…何が一番つらかった？少しだけでも話してみませんか？`
+    } else if (good > bad) {
+      return `前向きな気持ちが伝わってきますね。\n「${note}」\n…その中で一番嬉しかったことって何でしたか？`
+    } else {
+      return `気持ちが揺れているようですね。\n「${note}」\n…その気持ち、もう少し深く見つめてみましょうか。`
+    }
+  }
+
+  return (
+    <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
+      <h1>気分帳365🌤️</h1>
+      <p>良い気分（0〜100）</p>
+      <input
+        type="number"
+        value={goodScore}
+        onChange={(e) => setGoodScore(parseInt(e.target.value))}
+        min={0}
+        max={100}
+      />
+      <p>悪い気分（0〜100）</p>
+      <input
+        type="number"
+        value={badScore}
+        onChange={(e) => setBadScore(parseInt(e.target.value))}
+        min={0}
+        max={100}
+      />
+      <p>メモ（自由記入）</p>
+      <input
+        type="text"
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="例：今日は朝からだるかった…"
+        style={{ width: '100%' }}
+      />
+      <br /><br />
+      <button onClick={handleCheck}>AIセラピストに話してみる</button>
+
+      {comment && (
+        <>
+          <h3>今日のコメント</h3>
+          <p style={{ whiteSpace: 'pre-wrap' }}>{comment}</p>
+        </>
+      )}
+
+      <h3>記録ログ</h3>
+      <ul>
+        {log.map((entry, idx) => (
+          <li key={idx}>
+            [{entry.time}] 良: {entry.goodScore} / 悪: {entry.badScore}<br />
+            「{entry.note}」<br />
+            → {entry.comment}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
+export default App
