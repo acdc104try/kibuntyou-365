@@ -9,6 +9,8 @@ kibuntyou365/
 └── README.mdimport { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+
+
 export default defineConfig({
   plugins: [react()],
 })<!DOCTYPE html>
@@ -23,6 +25,8 @@ export default defineConfig({
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>import { useState } from 'react'
+
+
 
 function App() {
   const [goodScore, setGoodScore] = useState(50)
@@ -47,6 +51,7 @@ function App() {
       return `気持ちが揺れているようですね。\n「${note}」\n…その気持ち、もう少し深く見つめてみましょうか。`
     }
   }
+
 
   return (
     <div style={{ padding: 20, fontFamily: 'sans-serif' }}>
@@ -98,6 +103,8 @@ function App() {
     </div>
   )
 }
+
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
